@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Biblioteca com 54 códigos para criar imagens no ChatGPT.">
+<title>Códigos de Imagem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: prancha de cianotipia. Grade técnica ao fundo, biblioteca em fichas numeradas por categoria. */
+:root{
+  color-scheme:dark;
+  --bg:#0E2746;--bg2:#12315A;--ficha:#163A68;--linha:#2E5587;--grade:rgba(150,190,235,.07);
+  --fg:#EEF4FB;--fg2:#B4C7DE;--fg3:#8FA7C4;--acento:#FFD24A;--acento-fg:#2A2000;
+  --titulo:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --texto:Inter,"Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background-color:var(--bg);background-image:linear-gradient(var(--grade) 1px,transparent 1px),linear-gradient(90deg,var(--grade) 1px,transparent 1px);background-size:28px 28px;color:var(--fg);font:400 16px/1.55 var(--texto)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.page{max-width:1120px;margin:0 auto;padding-block:56px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:48px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+
+.hero{display:grid;justify-items:center;gap:18px;text-align:center}
+.selo{font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--acento);border:1px solid var(--linha);background:var(--bg2);padding:9px 14px;border-radius:6px}
+h1{margin:0;max-width:18ch;font:700 clamp(36px,6.4vw,60px)/1.05 var(--titulo);letter-spacing:-.03em;text-wrap:balance}
+h1 mark{background:none;color:var(--acento)}
+.lead{margin:0;max-width:58ch;color:var(--fg2);font-size:18px;text-wrap:balance}
+.exemplo{width:min(100%,600px);overflow-x:auto;background:var(--bg2);border:1px solid var(--linha);border-radius:8px;padding:14px 18px;text-align:left;font:400 14px/1.4 var(--mono);color:var(--fg2);white-space:nowrap}
+.exemplo b{color:var(--acento);font-weight:600}
+
+h2{margin:0;font:700 26px/1.2 var(--titulo);letter-spacing:-.02em}
+.como{display:grid;gap:18px}
+.passos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;counter-reset:p}
+.passos li{counter-increment:p;background:var(--bg2);border:1px solid var(--linha);border-radius:8px;padding:20px;display:grid;gap:6px;align-content:start}
+.passos li::before{content:"Passo " counter(p);font:600 12px/1 var(--mono);color:var(--acento);margin-bottom:6px}
+.passos h3{margin:0;font:700 18px/1.25 var(--titulo)}
+.passos p{margin:0;color:var(--fg2);font-size:15px}
+.aviso{margin:0;padding:14px 18px;border:1px dashed var(--linha);border-radius:8px;color:var(--fg2);font-size:15px}
+.aviso strong{color:var(--fg)}
+
+.biblioteca{display:grid;gap:16px}
+.cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#contagem{margin:0;color:var(--fg3);font:400 13px/1.3 var(--mono);font-variant-numeric:tabular-nums}
+.barra{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:grid;gap:10px;padding:12px;background:var(--bg2);border:1px solid var(--linha);border-radius:8px;box-shadow:0 10px 24px rgba(4,14,30,.45)}
+#busca{width:100%;height:46px;padding:0 14px;background:var(--bg);border:1px solid var(--linha);border-radius:6px}
+#busca::placeholder{color:var(--fg3)}
+.filtros{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.filtros::-webkit-scrollbar{display:none}
+.filtro{flex:none;height:36px;padding:0 13px;background:transparent;border:1px solid var(--linha);border-radius:6px;color:var(--fg2);font-size:14px;font-weight:500;cursor:pointer}
+.filtro:hover{color:var(--fg);border-color:var(--fg3)}
+.filtro[aria-pressed="true"]{background:var(--acento);border-color:var(--acento);color:var(--acento-fg);font-weight:600}
+
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.ficha{min-width:0;display:flex;flex-direction:column;gap:8px;padding:18px;background:var(--ficha);border:1px solid var(--linha);border-radius:8px}
+.ficha:hover{border-color:var(--fg3)}
+.ficha .cat{font:400 12px/1 var(--mono);color:var(--fg3)}
+.ficha code{font:600 15px/1.3 var(--mono);color:var(--acento);overflow-wrap:anywhere}
+.ficha h3{margin:0;font:700 19px/1.2 var(--titulo);letter-spacing:-.01em}
+.ficha p{margin:0;color:var(--fg2);font-size:14.5px;line-height:1.45}
+.txt{flex:1;margin:4px 0 0;padding:13px;background:var(--bg);border:1px solid var(--linha);border-radius:6px;font:400 13px/1.55 var(--mono);color:var(--fg);white-space:pre-wrap;overflow-wrap:anywhere}
+.txt .ph{color:var(--acento)}
+.acoes{display:flex;gap:8px;margin-top:8px}
+.bt{flex:1;min-height:40px;padding:0 12px;border-radius:6px;border:1px solid var(--linha);background:transparent;font-size:14px;font-weight:600;cursor:pointer}
+.bt:hover{border-color:var(--fg2)}
+.bt.pri{background:var(--acento);border-color:var(--acento);color:var(--acento-fg)}
+.bt.pri:hover{filter:brightness(1.06)}
+#vazio{padding:36px 18px;text-align:center;border:1px dashed var(--linha);border-radius:8px;color:var(--fg2);display:grid;justify-items:center;gap:12px}
+#vazio .bt{flex:none;padding:0 18px}
+
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);padding:11px 18px;background:var(--acento);color:var(--acento-fg);border-radius:6px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .16s,transform .16s;z-index:30;white-space:nowrap}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:720px){.page{padding-block:36px 56px;gap:36px}.passos{grid-template-columns:1fr}.lead{font-size:16px}}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <span class="selo">Biblioteca de imagens</span>
+    <h1><mark><span id="total">54</span> códigos</mark> para criar imagens no ChatGPT</h1>
+    <p class="lead">Escolha o resultado, cole no ChatGPT e troque os colchetes pelo seu produto, rosto ou ideia.</p>
+    <div class="exemplo"><b>/planta-tecnica</b> seu produto → desenho de engenharia</div>
+  </header>
+
+  <section class="como" aria-labelledby="t-como">
+    <h2 id="t-como">Como usar</h2>
+    <ol class="passos">
+      <li><h3>Encontre o efeito</h3><p>Busque por palavra ou filtre por anúncio, produto, retrato e outros.</p></li>
+      <li><h3>Copie o código</h3><p>Clique em Copiar código para levar o texto inteiro.</p></li>
+      <li><h3>Complete e envie</h3><p>Cole no ChatGPT e troque o que está entre colchetes. Se o código pedir, anexe a foto de referência.</p></li>
+    </ol>
+    <p class="aviso"><strong>Importante:</strong> o nome com barra serve só para você achar o código. Ele não é um comando do ChatGPT, então cole sempre o texto completo. Use fotos de outras pessoas só com autorização.</p>
+  </section>
+
+  <section class="biblioteca" aria-labelledby="t-bib">
+    <div class="cab"><h2 id="t-bib">Biblioteca</h2><p id="contagem" aria-live="polite"></p></div>
+    <div class="barra">
+      <input id="busca" type="search" placeholder="Buscar: logo, retrato, outdoor, 3D..." aria-label="Buscar código" autocomplete="off">
+      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
+    </div>
+    <div class="grade" id="lista"></div>
+    <div id="vazio" hidden><span>Nenhum código encontrado com essa busca.</span><button class="bt" id="limpar" type="button">Limpar busca e filtro</button></div>
+  </section>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const CATS={anuncio:"Anúncios",produto:"Produto",retrato:"Retrato",ambiente:"Ambiente",design:"Design e marca",estilo:"Estilos"};
+const CODIGOS=[
+["anuncio","/anuncio-heroi","Produto herói","Produto grande no centro, título e botão.","Crie um anúncio vertical 4:5 de [PRODUTO]. O produto fica grande e nítido no centro, sobre fundo [COR DE FUNDO], com luz de estúdio lateral e sombra suave. No topo, escreva exatamente “[TÍTULO]” em letra sem serifa, pesada e legível. Embaixo, um botão com o texto “[CHAMADA]”. Visual de campanha profissional, sem elementos extras."],
+["anuncio","/antes-depois","Antes e depois","Tela dividida que mostra a transformação.","Crie uma imagem 4:5 dividida ao meio na vertical para anunciar [PRODUTO OU SERVIÇO]. Lado esquerdo, com o rótulo “Antes”: [SITUAÇÃO ANTES], luz fria e cores apagadas. Lado direito, com o rótulo “Depois”: [SITUAÇÃO DEPOIS], luz quente e cores vivas. Mesmo enquadramento nos dois lados e uma linha branca fina no centro."],
+["anuncio","/oferta-relampago","Oferta com prazo","Cartaz direto para promoção.","Crie um cartaz de promoção 1:1 para [PRODUTO]. A oferta “[OFERTA]” aparece enorme, em letra condensada, ocupando metade da peça. O produto fica recortado ao lado, com sombra. Faixa inferior com o texto “[PRAZO]”. Paleta de duas cores: [COR PRINCIPAL] e branco. Composição forte e limpa, sem ícones nem enfeites."],
+["anuncio","/outdoor-3d","Outdoor 3D","Produto saindo da placa na rua.","Crie uma foto realista de um outdoor em [LOCAL] ao entardecer. O [PRODUTO] sai da moldura da placa em 3D, em escala gigante, projetando sombra real sobre a estrutura. Na placa, escreva exatamente “[TÍTULO]”. Carros e pessoas desfocados embaixo dão a noção de tamanho. Fotografia publicitária, lente 35 mm."],
+["anuncio","/ponto-de-onibus","Cartaz de rua","Seu anúncio num ponto de ônibus.","Crie uma foto realista de um ponto de ônibus em [CIDADE] à noite, com um painel iluminado exibindo o anúncio de [PRODUTO]. No painel, escreva exatamente “[TÍTULO]”. Calçada molhada refletindo a luz do painel, pessoas desfocadas passando. Enquadramento levemente de lado, aparência de foto de campanha."],
+["anuncio","/comparativo","Comparativo","Duas colunas: o comum e o seu.","Crie uma peça 4:5 de comparação em duas colunas. Coluna esquerda, cinza, com o título “[OPÇÃO COMUM]” e 3 itens com X: [PONTOS FRACOS]. Coluna direita, em [COR DA MARCA], com o título “[SUA OPÇÃO]” e 3 itens com check: [PONTOS FORTES]. Letra grande e legível, muito respiro e alinhamento rigoroso."],
+["anuncio","/problema-solucao","Problema e solução","Cena do incômodo com o produto resolvendo.","Crie uma foto publicitária de uma pessoa em [SITUAÇÃO DO PROBLEMA], com expressão de cansaço. Em primeiro plano, nítido e iluminado, o [PRODUTO] aparece como a saída. O fundo é frio e desfocado, e a luz quente vem do produto. Espaço livre no topo para o texto “[TÍTULO]”, escrito exatamente assim. Formato 4:5."],
+["anuncio","/lancamento","Teaser de lançamento","Mistério antes de revelar o produto.","Crie uma imagem de suspense para o lançamento de [PRODUTO]. O objeto está coberto por um tecido [COR DO TECIDO] sobre um pedestal, em sala escura, com um único feixe de luz de cima. Só a silhueta aparece. Embaixo, em letra fina e espaçada, escreva exatamente “[DATA DO LANÇAMENTO]”. Clima de cinema, formato 9:16."],
+["anuncio","/negocio-local","Negócio de bairro","Anúncio com cara da sua região.","Crie um anúncio 4:5 para [NEGÓCIO] no bairro [BAIRRO]. Mostre a frente do lugar em uma foto realista e acolhedora, com luz de fim de tarde e gente da região. Faixa superior com o texto “[TÍTULO]” e faixa inferior com “[ENDEREÇO OU CONTATO]”, escritos exatamente assim. Aparência autêntica, sem cara de banco de imagens."],
+
+["produto","/foto-estudio","Foto de estúdio","Fundo limpo para loja online.","Crie uma foto de estúdio de [PRODUTO] sobre fundo branco infinito. Luz suave de dois softboxes, sombra curta de contato e reflexos controlados. Produto centralizado, nítido de ponta a ponta, com cores fiéis à referência. Sem texto e sem objetos extras. Formato 1:1, qualidade de catálogo."],
+["produto","/flutuando","Produto flutuando","Produto no ar com ingredientes em volta.","Crie uma foto publicitária de [PRODUTO] flutuando no centro, levemente inclinado, cercado por [INGREDIENTES OU ELEMENTOS] suspensos no ar em várias distâncias. Fundo em degradê de [COR DE FUNDO]. Os elementos mais próximos ficam desfocados para dar profundidade. Luz de estúdio definida. Formato 4:5."],
+["produto","/splash","Explosão de líquido","Movimento congelado em alta velocidade.","Crie uma foto de alta velocidade de [PRODUTO] atingido por um respingo de [LÍQUIDO], com gotas congeladas no ar em volta dele. Fundo [COR DE FUNDO] liso. Luz de flash recortando o contorno do líquido. O rótulo continua nítido e legível. Formato 4:5, acabamento de campanha de bebidas."],
+["produto","/flat-lay","Vista de cima","Composição organizada sobre a mesa.","Crie uma foto de cima (flat lay) de [PRODUTO] sobre [SUPERFÍCIE], acompanhado de [OBJETOS DE APOIO] organizados com espaçamento regular. Luz natural de janela vindo da esquerda, sombras suaves. Paleta harmoniosa puxando para [COR PRINCIPAL]. Deixe um terço da imagem livre para texto. Formato 4:5."],
+["produto","/em-uso","Produto em uso","Cena real de alguém usando.","Crie uma foto de estilo de vida de [TIPO DE PESSOA] usando [PRODUTO] em [LUGAR]. O momento parece espontâneo, com a pessoa olhando para o que faz, sem encarar a câmera. O produto fica no ponto de foco e o fundo desfocado. Luz natural, lente 50 mm, cores reais e sem exagero."],
+["produto","/macro","Detalhe em macro","Textura e acabamento de perto.","Crie uma foto macro extrema do detalhe de [PRODUTO], mostrando a textura de [MATERIAL]. Profundidade de campo muito curta, luz rasante que revela cada relevo, fundo escuro e limpo. Aparência de filme publicitário de luxo. Sem texto. Formato 16:9."],
+["produto","/embalagem","Mockup de embalagem","Sua marca numa caixa realista.","Crie um mockup realista de uma embalagem tipo [TIPO DE EMBALAGEM] para a marca “[NOME DA MARCA]”, escrito exatamente assim. Design minimalista em [CORES DA MARCA]. Mostre a frente e uma lateral, em ângulo de três quartos, sobre superfície neutra com luz suave. Papel com textura visível. Formato 1:1."],
+["produto","/vista-explodida","Vista explodida","Todas as peças separadas no ar.","Crie uma vista explodida técnica de [PRODUTO], com todas as peças separadas e alinhadas em um eixo vertical, flutuando na ordem de montagem. Fundo cinza claro, luz neutra, sombras discretas. Linhas finas ligam cada peça a uma etiqueta curta com o nome dela. Aparência de render de engenharia. Formato 4:5."],
+["produto","/pedestal","Pedestal de pedra","Apresentação premium do produto.","Crie uma imagem de [PRODUTO] sobre um pedestal de [MATERIAL DO PEDESTAL], em um cenário minimalista com arcos e sombras geométricas projetadas pela luz do sol. Paleta de [CORES]. O produto é o único ponto de contraste. Render fotorrealista, formato 4:5."],
+
+["retrato","/retrato-executivo","Retrato executivo","Foto profissional a partir da sua.","Use a foto enviada como referência e mantenha o rosto igual. Crie um retrato executivo da pessoa vestindo [ROUPA], de braços cruzados, em um escritório moderno desfocado. Luz suave de janela e uma luz de recorte no cabelo. Expressão confiante e natural, pele com textura real. Lente 85 mm, formato 4:5."],
+["retrato","/retrato-cinema","Retrato de cinema","Luz dramática de filme.","Use a foto enviada como referência e mantenha o rosto igual. Crie um retrato com cara de cena de filme: a pessoa em [CENÁRIO], iluminada por uma luz lateral [COR DA LUZ] e sombra profunda do outro lado. Leve névoa no ar, granulação de película e proporção 2,39:1."],
+["retrato","/foto-perfil","Foto de perfil","Rosto forte para redes sociais.","Use a foto enviada como referência e mantenha o rosto igual. Crie uma foto de perfil quadrada, do peito para cima, com fundo liso em [COR DE FUNDO]. Luz frontal suave, olhos nítidos e um sorriso leve. O rosto ocupa boa parte do quadro e continua reconhecível mesmo em tamanho pequeno."],
+["retrato","/capa-revista","Capa de revista","Você na capa, com título.","Use a foto enviada como referência e mantenha o rosto igual. Crie uma capa de revista de negócios com a pessoa em pose firme, vestindo [ROUPA], sobre fundo [COR DE FUNDO]. Nome da revista no topo: “[NOME DA REVISTA]”. Chamada principal: “[CHAMADA]”. Escreva os textos exatamente assim. Diagramação editorial elegante."],
+["retrato","/palestrante","No palco","Foto de palestra com plateia.","Use a foto enviada como referência e mantenha o rosto igual. Crie uma foto da pessoa palestrando em um palco grande, com microfone de lapela e gesto de explicação. Telão ao fundo com o texto “[TEMA]”. Plateia desfocada em primeiro plano, luz de palco quente. Aparência de foto real de evento, formato 4:5."],
+["retrato","/preto-e-branco","Preto e branco","Retrato clássico de alto contraste.","Use a foto enviada como referência e mantenha o rosto igual. Crie um retrato em preto e branco, com fundo preto e uma única luz lateral que desenha metade do rosto. Textura de pele real, olhar direto para a câmera, granulação fina de filme. Composição fechada, formato 4:5."],
+["retrato","/rua-editorial","Editorial de rua","Moda urbana com fundo desfocado.","Use a foto enviada como referência e mantenha o rosto igual. Crie uma foto editorial da pessoa caminhando em uma rua de [CIDADE], vestindo [ROUPA]. Luz dourada de fim de tarde, fundo bem desfocado, movimento natural. Lente 85 mm aberta, cores de revista de moda, formato 4:5."],
+["retrato","/luz-de-janela","Luz de janela","Retrato íntimo e natural.","Use a foto enviada como referência e mantenha o rosto igual. Crie um retrato da pessoa sentada perto de uma janela grande em [AMBIENTE], olhando para fora, com a luz natural suave tocando um lado do rosto. Cores neutras e calmas, sensação de momento real, sem pose. Formato 4:5."],
+["retrato","/foto-de-equipe","Foto de equipe","Time reunido com cara profissional.","Use as fotos enviadas como referência e mantenha os rostos iguais. Crie uma foto da equipe de [EMPRESA] em [LUGAR], com as pessoas em alturas diferentes e poses relaxadas, todas vestindo [ROUPA]. Luz uniforme, todos os rostos nítidos. Aparência de foto institucional moderna, formato 16:9."],
+
+["ambiente","/fachada","Fachada renovada","Como sua loja pode ficar por fora.","Use a foto enviada como referência e mantenha a estrutura do prédio. Mostre a fachada de [NEGÓCIO] renovada, com letreiro “[NOME]” escrito exatamente assim, materiais de [MATERIAIS], plantas e iluminação embutida. Fim de tarde, foto de arquitetura em linhas retas."],
+["ambiente","/interior-loja","Interior de loja","Ambiente planejado para vender.","Crie uma foto de interior de uma loja de [TIPO DE LOJA] com estilo [ESTILO]. Prateleiras organizadas, iluminação em trilhos, piso de [PISO] e um balcão central. Sem pessoas. Lente grande-angular corrigida, luz equilibrada, aparência de revista de arquitetura. Formato 4:5."],
+["ambiente","/escritorio","Escritório dos sonhos","Espaço de trabalho com sua marca.","Crie uma foto de um escritório de [TIPO DE EMPRESA] com estilo [ESTILO], com mesa ampla, cadeira ergonômica, estante com livros e plantas. Na parede, o nome “[NOME DA MARCA]” em letras de metal, escrito exatamente assim. Luz natural entrando por janelas grandes. Formato 16:9."],
+["ambiente","/reforma","Reforma do cômodo","Transforme a foto de um ambiente.","Use a foto enviada como referência e mantenha paredes, portas e janelas no mesmo lugar. Redecore o cômodo no estilo [ESTILO], com móveis novos, paleta de [CORES] e iluminação planejada. Perspectiva idêntica à original e aparência de foto real de imobiliária."],
+["ambiente","/planta-3d","Planta em 3D","Casa vista de cima, sem teto.","Crie uma planta 3D isométrica de [TIPO DE IMÓVEL] com [CÔMODOS], vista de cima e sem teto. Cada cômodo mobiliado, com piso e cores próprias, paredes brancas recortadas. Fundo claro liso. Aparência de maquete digital limpa, com etiquetas pequenas no nome de cada cômodo."],
+["ambiente","/palco-evento","Palco de evento","Visual do seu evento antes de acontecer.","Crie uma foto de um palco de evento chamado “[NOME DO EVENTO]”, escrito exatamente assim no telão de LED central. Estrutura com treliças, luzes em [CORES] cortando uma névoa leve e plateia em silhueta em primeiro plano. Grande angular, clima de abertura de conferência. Formato 16:9."],
+["ambiente","/mesa-restaurante","Mesa de restaurante","Prato servido em clima aconchegante.","Crie uma foto de [PRATO] servido em uma mesa de madeira de restaurante, em ângulo de 45 graus. Luz quente e baixa, fundo com luzes desfocadas, talheres e uma bebida ao lado. Comida com aparência fresca e apetitosa, vapor sutil. Formato 4:5."],
+["ambiente","/imovel-entardecer","Imóvel ao entardecer","Foto de venda com céu bonito.","Use a foto enviada como referência e mantenha a construção igual. Transforme a cena em fim de tarde, com céu alaranjado suave, luzes internas acesas, jardim bem cuidado e reflexo leve no piso. Aparência de foto profissional de imóvel à venda, sem alterar portas, janelas ou medidas."],
+["ambiente","/cidade-miniatura","Cidade em miniatura","Seu bairro como maquete.","Crie uma imagem de [LUGAR] como uma maquete em miniatura, vista de cima em diagonal. Prédios, carros e pessoas pequeninos, com efeito de foco seletivo (tilt-shift) nas bordas. Cores saturadas, luz de manhã e aparência de modelo artesanal fotografado em estúdio. Formato 4:5."],
+
+["design","/logo-simbolo","Logo com símbolo","Marca simples e memorável.","Crie um logo para “[NOME DA MARCA]”, escrito exatamente assim, do ramo de [RAMO]. Um símbolo geométrico simples ao lado do nome, em uma cor só: [COR]. Fundo branco, traço limpo, sem degradê e sem sombra. Deve continuar legível em tamanho bem pequeno."],
+["design","/guia-de-marca","Guia de marca","Prancha com cores, letra e aplicações.","Crie uma prancha de identidade visual para “[NOME DA MARCA]”, do ramo de [RAMO]. Organize em blocos: logo, paleta de 5 cores com código, exemplo de tipografia, padrão gráfico e duas aplicações (cartão e embalagem). Estilo [ESTILO], grade rigorosa, fundo neutro. Formato 16:9."],
+["design","/capa-reels","Capa de Reels","Capa vertical que chama o clique.","Crie uma capa vertical 9:16 para um vídeo sobre [TEMA]. Use a foto enviada como referência e mantenha o rosto igual, com expressão forte, na metade de baixo. Na metade de cima, escreva exatamente “[TÍTULO]” em letra pesada e grande, com uma palavra em [COR DE DESTAQUE]. Fundo simples."],
+["design","/capa-carrossel","Capa de carrossel","Primeira página que faz deslizar.","Crie a capa de um carrossel 4:5 do Instagram sobre [TEMA]. Título enorme, escrito exatamente “[TÍTULO]”, alinhado à esquerda e ocupando dois terços da peça. Fundo [COR DE FUNDO], uma imagem de apoio pequena de [ELEMENTO] e uma seta discreta no canto inferior direito."],
+["design","/post-frase","Post de frase","Frase forte em layout limpo.","Crie um post 1:1 com a frase exatamente assim: “[FRASE]”. Fundo [COR DE FUNDO] com textura de papel sutil. Letra serifada grande, centralizada, com a palavra mais importante em itálico. Muito respiro nas margens, nenhum ícone e nenhum outro texto."],
+["design","/infografico","Infográfico","Explica um assunto em etapas.","Crie um infográfico vertical sobre [ASSUNTO], com título “[TÍTULO]” e [NÚMERO DE ETAPAS] etapas numeradas, uma abaixo da outra: [ETAPAS]. Cada etapa tem um ícone simples e uma frase curta. Paleta de [CORES], letra legível e linha conectando tudo. Escreva os textos exatamente como informados."],
+["design","/cartao-visita","Cartão de visita","Mockup elegante do seu cartão.","Crie um mockup realista de dois cartões de visita empilhados para [NOME], [CARGO]. Papel grosso com textura, detalhe em [ACABAMENTO] e paleta de [CORES]. Escreva os textos exatamente como informados, com diagramação minimalista. Superfície escura, luz lateral suave."],
+["design","/thumbnail-youtube","Thumbnail de YouTube","Miniatura com rosto e poucas palavras.","Crie uma thumbnail 16:9 para um vídeo sobre [TEMA]. Use a foto enviada como referência e mantenha o rosto igual, com expressão de surpresa, à direita. À esquerda, no máximo 3 palavras: “[TEXTO]”, escritas exatamente assim, em letra enorme. Um objeto de [ELEMENTO] reforça a ideia. Alto contraste."],
+["design","/convite-evento","Convite de evento","Arte para divulgar data e local.","Crie uma arte 4:5 para o evento “[NOME DO EVENTO]”. Palavra principal gigante ao fundo, imagem de [ELEMENTO PRINCIPAL] em destaque na frente e pílulas arredondadas com “[DATA]” e “[LOCAL]”. Escreva os textos exatamente assim. Paleta de [CORES] e clima de cartaz de cinema."],
+
+["estilo","/planta-tecnica","Planta técnica","Desenho de engenharia em azul.","Transforme [PRODUTO] em uma planta técnica em estilo cianotipia: fundo azul profundo com grade fina, linhas brancas precisas, vistas de frente, lado e topo, cotas de medida e pequenas anotações técnicas. Sem sombras e sem cor extra. Aparência de desenho original de engenharia. Formato 4:3."],
+["estilo","/miniatura-3d","Miniatura 3D","Objeto fofo em plástico brilhante.","Crie [ASSUNTO] como uma miniatura 3D fofa, com formas arredondadas, acabamento de plástico brilhante e cores vivas. Fundo liso em [COR DE FUNDO], luz de estúdio suave e sombra macia. Composição centralizada, aparência de ícone 3D premium. Formato 1:1."],
+["estilo","/boneco-colecionavel","Boneco na caixa","Você como boneco de coleção.","Use a foto enviada como referência. Crie um boneco colecionável da pessoa, dentro de uma caixa de brinquedo com janela de plástico. Acessórios ao lado, nos encaixes: [ACESSÓRIOS]. Na caixa, escreva exatamente “[NOME]” e “[PROFISSÃO]”. Cores de [CORES], foto de produto realista."],
+["estilo","/massinha","Massinha de modelar","Cena artesanal feita à mão.","Recrie [CENA] como se fosse feita de massinha de modelar, com marcas de dedo visíveis, formas imperfeitas e cores vivas. Cenário em miniatura, luz de estúdio suave, aparência de quadro de animação em stop motion. Formato 16:9."],
+["estilo","/aquarela","Aquarela","Pintura delicada em papel.","Pinte [ASSUNTO] em aquarela sobre papel de algodão, com manchas transparentes, bordas que se espalham e áreas em branco do próprio papel. Paleta de [CORES]. Traços soltos e delicados, respingos sutis. Aparência de ilustração feita à mão. Formato 4:5."],
+["estilo","/pixel-art","Pixel art","Visual de jogo antigo.","Crie [ASSUNTO] em pixel art de 32 bits, com grade de pixels visível, paleta limitada de 16 cores e sombreamento por pontilhado. Cenário de [CENÁRIO] ao fundo. Bordas nítidas, sem suavização. Formato 1:1."],
+["estilo","/isometrico","Isométrico","Mundo em bloco, visto em diagonal.","Crie uma ilustração isométrica 3D de [ASSUNTO] sobre uma base quadrada flutuante. Detalhes pequenos e organizados, cores em tons de [CORES], sombras suaves e fundo liso. Aparência de maquete digital, com tudo em ângulo de 30 graus. Formato 1:1."],
+["estilo","/neon","Neon noturno","Letreiro brilhando no escuro.","Crie um letreiro de neon com o texto exatamente “[TEXTO]”, em tubos de vidro [COR DO NEON], preso em uma parede de tijolos escuros. O brilho reflete na parede e no chão molhado. Fios e suportes visíveis, ambiente noturno, foto realista. Formato 4:5."],
+["estilo","/colagem","Colagem de papel","Recortes com textura de revista.","Crie uma colagem artística sobre [TEMA], com recortes de papel de revista, fotos em preto e branco, fita adesiva, rasgos visíveis e formas em [COR DE DESTAQUE]. Composição em camadas com sombra leve entre os papéis. Título “[TÍTULO]” escrito exatamente assim com letras recortadas. Formato 4:5."]
+].map(([cat,cmd,titulo,resumo,texto])=>({cat,cmd,titulo,resumo,texto}));
+
+const $=id=>document.getElementById(id);
+const sem=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const PH=/\[([^\]]+)\]/g;
+let filtro="todos",tempoToast;
+$("total").textContent=CODIGOS.length;
+
+$("filtros").innerHTML=[["todos","Todos"],...Object.entries(CATS)].map(([k,n])=>`<button class="filtro" type="button" data-f="${k}" aria-pressed="${k==="todos"}">${n}</button>`).join("");
+$("lista").innerHTML=CODIGOS.map((c,i)=>`<article class="ficha" data-i="${i}"><span class="cat">${CATS[c.cat]}</span><code>${c.cmd}</code><h3>${esc(c.titulo)}</h3><p>${esc(c.resumo)}</p><pre class="txt" tabindex="0">${esc(c.texto).replace(PH,'<span class="ph">$&</span>')}</pre><div class="acoes"><button class="bt pri" type="button" data-a="copiar">Copiar código</button></div></article>`).join("");
+const fichas=[...document.querySelectorAll(".ficha")];
+
+function aplicar(){
+  const q=sem($("busca").value.trim());let n=0;
+  fichas.forEach((f,i)=>{const c=CODIGOS[i];const ok=(filtro==="todos"||c.cat===filtro)&&(!q||sem(`${c.cmd} ${c.titulo} ${c.resumo} ${c.texto} ${CATS[c.cat]}`).includes(q));f.hidden=!ok;if(ok)n++;});
+  $("contagem").textContent=`${n} de ${CODIGOS.length} códigos`;$("vazio").hidden=n>0;$("lista").hidden=n===0;
+}
+function marcar(k){filtro=k;document.querySelectorAll(".filtro").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===k)));aplicar();}
+function aviso(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(tempoToast);tempoToast=setTimeout(()=>el.classList.remove("on"),1900);}
+async function copiar(txt,ficha){
+  try{await navigator.clipboard.writeText(txt);aviso("Código copiado");return;}catch(e){}
+  const a=document.createElement("textarea");a.value=txt;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();
+  let ok=false;try{ok=document.execCommand("copy");}catch(e){}a.remove();
+  if(ok){aviso("Código copiado");return;}
+  const s=getSelection(),r=document.createRange();r.selectNodeContents(ficha.querySelector(".txt"));s.removeAllRanges();s.addRange(r);aviso("Texto selecionado. Agora é só copiar");
+}
+
+$("busca").addEventListener("input",aplicar);
+$("filtros").addEventListener("click",e=>{const b=e.target.closest(".filtro");if(b)marcar(b.dataset.f);});
+$("lista").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const f=b.closest(".ficha");copiar(CODIGOS[+f.dataset.i].texto,f);});
+$("limpar").addEventListener("click",()=>{$("busca").value="";marcar("todos");$("busca").focus();});
+aplicar();
+</script>
+</body>
+</html>
